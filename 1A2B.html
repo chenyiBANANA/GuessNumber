@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>chenyi_guess</title>
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <link href="stylesheets/dashboard.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+ 
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="btn-group btn-group-justified">
+                                <a id="start" type="button" class="btn btn-default">開始</a>
+                                <a id="restart" type="button" class="btn btn-default">放棄重來</a>
+                                <a id="cheat" type="button" class="btn btn-default">看答案</a>
+                            </div>
+                            <br>
+                            <ul id="guessResults" class="list-group">
+                                <li class="list-group-item">
+                                    <span class="label label-danger">0A1B</span>
+                                    1234
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="label label-danger">0A3B</span>
+                                    3456
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="label label-danger">0A2B</span>
+                                    4567
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="label label-danger">2A0B</span>
+                                    6089
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="label label-danger">3A0B</span>
+                                    6345
+                                </li>
+                                <li class="list-group-item">
+                                    <span class="label label-success">4A0B</span>
+                                    6385
+                                </li>
+                            </ul>
+                            <div class="input-group">
+                                <span class="input-group-addon" id="sizing-addon1">猜答案</span>
+                                <input id="userGuess" type="text" name="" class="form-control" value=""
+                                    required="required">
+                                <span class="input-group-btn">
+                                    <a id="guess" type="button" class="btn btn-default">猜!</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="scripts/bootstrap.min.js"></script>
+    <script>
+        var vlaue = "";
+        var answer = "";
+        function stratGame() {
+            document.getElementById("guessResults").innerHTML = "";
+            document.getElementById("userGuess").vlaue = "";
+            answer = "";
+            while (answer.length < 4) {
+                vlaue = Math.floor(Math.random() * 10);
+                if (answer.indexOf(vlaue) == -1) {
+                    answer += vlaue;
+                }
+            }
+            console.log(answer)
+        }
+       
+        function abortGame() {
+            if (confirm("放棄?")) {
+                stratGame();
+            }
+        }
+
+        function showAnswer() {
+            alert(answer);
+            stratGame();
+        }
+
+        function doGuess() {
+            var userGuess = document.getElementById("userGuess");
+            var thisRoundAnswer = userGuess.value;
+            if (thisRoundAnswer.length != 4) {
+                alert("沒有四個數字喔!")
+                console.log(thisRoundAnswer.length)
+                return;
+            }
+            if (isNaN(thisRoundAnswer)) {
+                alert("必須為數字!")
+                return;
+            }
+            var existed = "";
+            var a = 0;
+            var b = 0;
+            for (i = 0; i < thisRoundAnswer.length; i++) {
+                var number = thisRoundAnswer.charAt(i);
+                if (existed.indexOf(number) != -1) {
+                    alert("數字不可重複!")
+                    return;
+                }
+
+                existed += number;
+
+                for (j = 0; j < answer.length; j++) {
+                   
+                    if (existed[i] == answer[j]) {
+                        if (i == j) {
+                            a++;
+                        }
+                        else if (i != j) {
+                            b++;
+                        }
+                    }
+                }
+            }
+            var ab = a + "A" + b + "B";
+            if (a == 4) {
+                var success = document.getElementById("guessResults");
+                success.innerHTML += '<li class="list-group-item"><span class="label label-success">' + ab + '</span>' + existed + '</li>'
+            }
+            else {
+                var success = document.getElementById("guessResults");
+                success.innerHTML += '<li class="list-group-item"><span class="label label-danger">' + ab + '</span>' + existed + '</li>'
+            }
+        }
+        stratGame();
+        document.getElementById("start").onclick = stratGame;
+        document.getElementById("restart").onclick = abortGame;
+        document.getElementById("cheat").onclick = showAnswer;
+        document.getElementById("guess").onclick = doGuess;
+    </script>
+</body>
+
+</html>
